@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            display: flex;
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background:cadetblue;
+            color: black;
+            transition: left 0.3s;
+            padding-top: 20px;
+            
+        }
+
+        #sidebar.active {
+            left: 0;
+        }
+
+        #closeBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        #addContactForm {
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                left: -250px;
+            }
+
+            #sidebar.active {
+                left: 0;
+            }
+
+            #addContactForm {
+                margin-left: 0;
+            }
+        }
+
+        .navbar {
+            background-color: #f8f9fa;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+        }
+
+        .navbar-nav {
+            margin-left: auto;
+        }
+
+        .nav-link {
+            color: #343a40 !important;
+        }
+
+        .nav-link:hover {
+            color: #007bff !important;
+        }
+    </style>
+
+    <script>
+        function enableView() {
+            const from = document.getElementById('fromSubmission').value;
+            const to = document.getElementById('toSubmission').value;
+            const viewButton = document.getElementById('viewButton');
+
+            if (from !== "" && to !== "") {
+                viewButton.removeAttribute('disabled');
+            } else {
+                viewButton.setAttribute('disabled', 'disabled');
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a id="sidebarLogo" href="#" style="margin-right: 10px;">
+            <i class="fas fa-bars"></i>Menu
+        </a>
+        <a class="navbar-brand" href="#">Contact Manager</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{'/user/index'}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{'/signin'}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/signup">SignUp</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/trackingFields">Track Data</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${user != null}" th:text="${user.name}"></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="container">
+        <nav id="sidebar">
+            <div class="position-sticky">
+                <button id="closeBtn" class="btn btn-danger">
+                    <i class="fas fa-times"></i>
+                </button>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/user/contact-form">
+                            <i class="fas fa-user-plus"></i> Add Contact
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/view_contacts">
+                            <i class="fas fa-users"></i> View All Contacts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10" id="addContactForm">
+            <div th:include="${content}"></div>
+        </main>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYyfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <script>
+        // Toggle sidebar when clicking the logo or close button
+        document.getElementById("sidebarLogo").addEventListener("click", function () {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("active");
+        });
+        document.getElementById("closeBtn").addEventListener("click", function () {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("active");
+        });
+    </script>
+</body>
+
+</html>

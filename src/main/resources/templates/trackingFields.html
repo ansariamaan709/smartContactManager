@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="user/base::layout(~{::section})">
+
+<head>
+    <title>Form</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script>
+        function enableView() {
+            const from = document.getElementById('fromSubmission').value;
+            const to = document.getElementById('toSubmission').value;
+            const viewButton = document.getElementById('viewButton');
+
+            if (from !== "" && to !== "") {
+                viewButton.removeAttribute('disabled');
+            } else {
+                viewButton.setAttribute('disabled', 'disabled');
+            }
+        }
+    </script>
+</head>
+
+<section>
+    <body onload="enableView()">
+        <div class="container mt-4">
+            <h2 class="mb-4">Tracking Fields</h2>
+            <form novalidate class="mx-1 mx-md-4" th:object="${objectWrapper}" th:action="@{/view}" method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="fromSubmission">From Submission</label>
+                        <select class="form-control" name="fromSubmission" id="fromSubmission" onchange="enableView()">
+                            <option value="">Select From Submission</option>
+                            <option th:each="userId : ${userIds}" th:value="${userId}" th:text="${userId}" th:selected="${fromView != null && fromView.id == userId}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="toSubmission">To Submission</label>
+                        <select class="form-control" name="toSubmission" id="toSubmission" onchange="enableView()">
+                            <option value="">Select To Submission</option>
+                            <option th:each="userId : ${userIds}" th:value="${userId}" th:text="${userId}" th:selected="${toView != null && toView.id == userId}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" id="viewButton" class="btn btn-primary" disabled="disabled">View</button>
+                </div>
+            </form>
+
+            <div class="row mt-4" th:if="${fromView!=null && toView!=null}">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Labels</th>
+                                <th>From Submission</th>
+                                <th>To Submission</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:class="${fromView.name != toView.name ? 'highlight-row' : ''}">
+                                <td>Name:</td>
+                                <td><output th:text="${fromView.name}"></output></td>
+                                <td><output th:text="${toView.name}"></output></td>
+                            </tr>
+                            <tr>
+                                <td>Email:</td>
+                                <td><output th:text="${fromView.email}"></output></td>
+                                <td><output th:text="${toView.email}"></output></td>
+                            </tr>
+                            <tr th:class="${fromView.name != toView.name ? 'highlight-row' : ''}">
+                                <td>Contacts Email:</td>
+                                <td>
+                                 <pre th:each="contact : ${fromView.contacts}" th:text="${contact.email}"></pre>
+
+                                </td>
+                                <td>
+                                    <pre th:each="contact : ${toView.contacts}" th:text="${contact.email}"></pre>
+                                </td>
+                            </tr>
+                            <!-- Add more rows for other fields you want to display -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .highlight-row {
+                background-color: #ffcc00; /* Set your desired highlight color here */
+            }
+            
+            button:disabled {
+                background-color: #6c757d !important;
+            }
+        </style>
+
+        <!-- Include Bootstrap JS and jQuery (for Bootstrap functionality) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</section>
+
+</html>
